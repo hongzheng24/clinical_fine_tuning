@@ -1,0 +1,35 @@
+{
+  "doc_id": "240503191035602IAFHDG",
+  "sections": [
+    "PREAMBLE"
+  ],
+  "entities": {
+    "PROBLEM": [],
+    "MEDICATION": [],
+    "PROCEDURE": []
+  },
+  "codes": [
+    {
+      "diagnosis": "I10.0",
+      "icd10_code": "I10.0",
+      "icd10_description": "Osteoporosis",
+      "reasoning": "The patient is on Fosamax, a medication for osteoporosis, and denies any issues with his joints.",
+      "llm_self_reported_confidence": "high"
+    }
+  ],
+  "evidence": [
+    {
+      "diagnosis": "I10.0",
+      "icd10_code": "I10.0",
+      "supporting_quote": null,
+      "match_score": 0.17,
+      "verified": false
+    }
+  ],
+  "confidence": {
+    "I10.0": 0.5
+  },
+  "warnings": [
+    "No strong textual support found for 'I10.0' (I10.0) -- flagged for human review"
+  ]
+}

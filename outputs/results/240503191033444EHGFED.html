@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>Coding Review -- 240503191033444EHGFED</title>
+<style>
+body { font-family: -apple-system, Segoe UI, sans-serif; max-width: 900px; margin: 40px auto; color: #1a1a1a; line-height: 1.5; }
+h1 { font-size: 22px; }
+h2 { font-size: 16px; color: #444; margin-top: 32px; }
+.card { border: 1px solid #ddd; border-radius: 8px; padding: 16px; margin-bottom: 14px; }
+.high { border-left: 6px solid #2e7d32; }
+.medium { border-left: 6px solid #f9a825; }
+.low { border-left: 6px solid #c62828; background: #fff6f6; }
+.code { font-weight: 600; font-size: 15px; }
+.quote { font-style: italic; color: #333; background: #f7f7f7; padding: 8px 10px; border-radius: 4px; margin-top: 6px; }
+.missing-quote { color: #c62828; font-weight: 500; }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 12px; font-weight: 600; color: white; }
+.badge.high { background: #2e7d32; border: none; }
+.badge.medium { background: #f9a825; border: none; }
+.badge.low { background: #c62828; border: none; }
+.warnings { background: #fff3cd; border: 1px solid #ffe08a; border-radius: 6px; padding: 12px; margin-top: 20px; }
+.trace { font-family: monospace; font-size: 12px; color: #555; white-space: pre-wrap; background: #fafafa; padding: 12px; border-radius: 6px; }
+.section-body { white-space: pre-wrap; background: #fafafa; padding: 10px; border-radius: 6px; font-size: 13px; }
+</style></head>
+<body>
+<h1>Agentic Clinical Coding Review</h1>
+<p><strong>Document:</strong> 240503191033444EHGFED</p>
+
+<h2>Suggested Codes (1)</h2>
+
+        <div class="card high">
+          <div class="code">J00.0 &mdash; Upper respiratory tract infection
+            <span class="badge high">1.00 confidence</span>
+          </div>
+          <div><strong>Diagnosis:</strong> upper respiratory infection</div>
+          <div><strong>Reasoning:</strong> Andrew Campbell presents with symptoms of an upper respiratory infection, including fatigue, shortness of breath, and coughing up phlegm, which are consistent with this diagnosis.</div>
+          <div class="quote">"CHIEF COMPLAINT
+
+Upper respiratory infection."</div>
+        </div>
+        
+
+
+
+<h2>Detected Sections</h2>
+<h2>PREAMBLE</h2><div class="section-body">CHIEF COMPLAINT
+
+Upper respiratory infection.
+
+HISTORY OF PRESENT ILLNESS
+
+Andrew Campbell is a 59-year-old male with a past medical history significant for depression, type 2 diabetes, and hypertension. He presents today with an upper respiratory infection.
+
+The patient reports that he has been doing a bit of work out in the yard in the last week or so. He started to feel really tired and short of breath. The patient denies coughing up anything, but he feels like he will soon be coughing up phlegm. He denies having a fever, but he felt a little warm. He attributed this to exerting himself. He reports that his elbows hurt quite a bit. He notes his knees were pretty tired and he felt some tension around his knees. The patient attributes these symptoms to lifting heavy bags. He has not been wearing a mask as much recently. He believes that he caught his first cold and his symptoms have worsened. He has had both of his COVID vaccinations.
+
+He denies any history of seasonal</div><h2>allergies</h2><div class="section-body">.
+
+Regarding his depression, he states it has been a crazy year and a half. He was a little concerned about that, but for the most part, he has been doing well with it. His wife got him into barre classes and this has been relaxing.
+
+Regarding his diabetes, he has been monitoring his sugar levels while he is at work, but is not as consistent on Saturdays and Sundays. His diet has been pretty good for the most part, except for some house parties. They have not been elevated since his respiratory symptoms began.
+
+The patient has been monitoring his blood pressure at home. He reports that he is very regular with monitoring his blood pressure during the week, though less consistently on weekends. He reports his blood pressure has been under control. He has continued to utilize lisinopril 20 mg, daily.
+
+The patient denies nausea, vomiting, diarrhea.
+
+REVIEW OF SYSTEMS
+
+• Constitutional: Denies fever.
+
+• Cardiovascular: Endorses dyspnea on exertion.
+
+• Respiratory: Endorses shortness of breath and cough.
+
+• Gastrointestinal: Denies nausea or diarrhea.
+
+• Musculoskeletal: Endorses bilateral elbow and knee pain.
+
+• Psychiatric: Endorses depression.
+
+PHYSICAL EXAMINATION
+
+• Respiratory: Scattered rhonchi bilaterally, clears with cough.
+
+• Cardiovascular: No murmurs, gallops, or rubs. No extra heart sounds.
+
+• Musculoskeletal: Edema in the bilateral lower extremities. Pain to palpation of the bilateral elbows.
+
+RESULTS
+
+X-ray of the chest is unremarkable. No airspace disease. No signs </div>
+
+<h2>Agent Trace (pipeline log)</h2>
+<div class="trace">[DocumentAgent] loaded raw text input (no OCR needed)
+[SectionAgent] detected 2 section(s): [&#x27;PREAMBLE&#x27;, &#x27;allergies&#x27;]
+[EntityAgent] extracted 4 active entities, 1 negated (excluded from coding)
+[CodingAgent] LLM suggested 1 ICD-10 code(s)
+[VerificationAgent] verified 1/1 suggested code(s) against source text
+[ConfidenceAgent] scored 1 code(s); flagged 0 for mandatory review</div>
+
+</body></html>

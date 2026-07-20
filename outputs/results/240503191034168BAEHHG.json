@@ -1,0 +1,42 @@
+{
+  "doc_id": "240503191034168BAEHHG",
+  "sections": [
+    "PREAMBLE",
+    "allergies"
+  ],
+  "entities": {
+    "PROBLEM": [
+      {
+        "text": "atrial fibrillation",
+        "label": "PROBLEM",
+        "negated": false,
+        "is_family": false,
+        "is_historical": true
+      }
+    ],
+    "MEDICATION": [],
+    "PROCEDURE": []
+  },
+  "codes": [
+    {
+      "diagnosis": "atrial fibrillation",
+      "icd10_code": "I10",
+      "icd10_description": "Atrial fibrillation",
+      "reasoning": "The patient's history of atrial fibrillation, rheumatoid arthritis, and reflux, along with palpitations and stress-induced flare-ups, suggests a possible arrhythmia.",
+      "llm_self_reported_confidence": "high"
+    }
+  ],
+  "evidence": [
+    {
+      "diagnosis": "atrial fibrillation",
+      "icd10_code": "I10",
+      "supporting_quote": "HISTORY OF PRESENT ILLNESS\n\nAndrea Roberts is a 52-year-old female with a past medical history significant for rheumatoid arthritis, atrial fibrillation, and reflux, who presents today for her annual exam.",
+      "match_score": 1.0,
+      "verified": true
+    }
+  ],
+  "confidence": {
+    "I10": 1.0
+  },
+  "warnings": []
+}

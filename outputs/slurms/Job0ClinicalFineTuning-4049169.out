@@ -1,0 +1,61 @@
+## SLURM PROLOG ###############################################################
+##    Job ID : 4049169
+##  Job Name : Job0ClinicalFineTuning
+##  Nodelist : gpu2509
+##      CPUs : 4
+##  Mem/Node : 16384 MB
+## Directory : /oscar/data/sbach/hzheng29/my_clinical_fine_tuning/slurms
+##   Job Started : Thu Jul 16 09:22:01 PM EDT 2026
+###############################################################################
+
+=== Running pipeline on: medcoder_DEBUG001 ===
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files:  25%|██▌       | 1/4 [01:59<05:59, 119.76s/it]Fetching 4 files: 100%|██████████| 4/4 [01:59<00:00, 29.94s/it] 
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:17<00:53, 17.91s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:36<00:36, 18.39s/it]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:55<00:18, 18.70s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:59<00:00, 12.95s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:59<00:00, 14.96s/it]
+  [DocumentAgent] loaded raw text input (no OCR needed)
+  [SectionAgent] detected 2 section(s): ['PREAMBLE', 'allergies']
+  [EntityAgent] extracted 4 active entities, 1 negated (excluded from coding)
+  [CodingAgent] LLM suggested 2 ICD-10 code(s)
+  [VerificationAgent] verified 2/2 suggested code(s) against source text
+  [ConfidenceAgent] scored 2 code(s); flagged 0 for mandatory review
+  -> wrote output/medcoder_DEBUG001.html
+  -> wrote output/medcoder_DEBUG001.json
+
+=== Running pipeline on: medcoder_DEBUG002 ===
+  [DocumentAgent] loaded raw text input (no OCR needed)
+  [SectionAgent] detected 2 section(s): ['PREAMBLE', 'allergies']
+  [EntityAgent] extracted 1 active entities, 0 negated (excluded from coding)
+  [CodingAgent] LLM suggested 1 ICD-10 code(s)
+  [VerificationAgent] verified 1/1 suggested code(s) against source text
+  [ConfidenceAgent] scored 1 code(s); flagged 0 for mandatory review
+  -> wrote output/medcoder_DEBUG002.html
+  -> wrote output/medcoder_DEBUG002.json
+
+=== Running pipeline on: asclepius_DEBUG001 ===
+  [DocumentAgent] loaded raw text input (no OCR needed)
+  [SectionAgent] detected 1 section(s): ['PREAMBLE']
+  [EntityAgent] extracted 7 active entities, 2 negated (excluded from coding)
+  [CodingAgent] LLM suggested 3 ICD-10 code(s)
+  [VerificationAgent] verified 3/3 suggested code(s) against source text
+  [ConfidenceAgent] scored 3 code(s); flagged 0 for mandatory review
+  -> wrote output/asclepius_DEBUG001.html
+  -> wrote output/asclepius_DEBUG001.json
+
+=== Running pipeline on: asclepius_DEBUG002 ===
+  [DocumentAgent] loaded raw text input (no OCR needed)
+  [SectionAgent] detected 1 section(s): ['PREAMBLE']
+  [EntityAgent] extracted 7 active entities, 2 negated (excluded from coding)
+  [CodingAgent] LLM suggested 2 ICD-10 code(s)
+  [VerificationAgent] verified 2/2 suggested code(s) against source text
+  [ConfidenceAgent] scored 2 code(s); flagged 0 for mandatory review
+  -> wrote output/asclepius_DEBUG002.html
+  -> wrote output/asclepius_DEBUG002.json
+
+=== Running pipeline on: asclepius_DEBUG003 ===
+  [DocumentAgent] loaded raw text input (no OCR needed)
+  [SectionAgent] detected 1 section(s): ['PREAMBLE']
+  [EntityAgent] extracted 3 active entities, 5 negated (excluded from coding)
+  [CodingAgent] LLM suggested 1 ICD-10 code(s)
+  [VerificationAgent] verified 1/1 suggested code(s) against source text
+  [ConfidenceAgent] scored 1 code(s); flagged 0 for mandatory review
+  -> wrote output/asclepius_DEBUG003.html
+  -> wrote output/asclepius_DEBUG003.json
