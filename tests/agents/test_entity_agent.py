@@ -1,0 +1,49 @@
+# python -m tests...
+# python -m unittest discover -s tests
+
+import unittest
+from src.preprocess.load_medcoder import build_dataset, ExampleClass
+from src.agents.entity_agent import extract_entities
+from src.utils.pipeline import PipelineState
+
+TEXT_FILEPATH = '/users/hzheng29/data/hzheng29/my_clinical_fine_tuning/data/raw_data/text.csv'
+DIAGNOSIS_FILEPATH = '/users/hzheng29/data/hzheng29/my_clinical_fine_tuning/data/raw_data/diagnosis.csv'
+
+dataset = build_dataset(TEXT_FILEPATH, DIAGNOSIS_FILEPATH, None, None, 5, 10, None, None)
+
+class TestBuildDataset(unittest.TestCase):
+    def setUp(self):
+        self.raw_texts = [
+            'CHIEF COMPLAINT\n\nUpper respiratory infection.\n\nHISTORY OF PRESENT ILLNESS\n\nAndrew Campbell is a 59-year-old male with a past medical history significant for depression, type 2 diabetes, and hypertension. He presents today with an upper respiratory infection.\n\nThe patient reports that he has been doing a bit of work out in the yard in the last week or so. He started to feel really tired and short of breath. The patient denies coughing up anything, but he feels like he will soon be coughing up phlegm. He denies having a fever, but he felt a little warm. He attributed this to exerting himself. He reports that his elbows hurt quite a bit. He notes his knees were pretty tired and he felt some tension around his knees. The patient attributes these symptoms to lifting heavy bags. He has not been wearing a mask as much recently. He believes that he caught his first cold and his symptoms have worsened. He has had both of his COVID vaccinations.\n\nHe denies any history of seasonal allergies.\n\nRegarding his depression, he states it has been a crazy year and a half. He was a little concerned about that, but for the most part, he has been doing well with it. His wife got him into barre classes and this has been relaxing.\n\nRegarding his diabetes, he has been monitoring his sugar levels while he is at work, but is not as consistent on Saturdays and Sundays. His diet has been pretty good for the most part, except for some house parties. They have not been elevated since his respiratory symptoms began.\n\nThe patient has been monitoring his blood pressure at home. He reports that he is very regular with monitoring his blood pressure during the week, though less consistently on weekends. He reports his blood pressure has been under control. He has continued to utilize lisinopril 20 mg, daily.\n\nThe patient denies nausea, vomiting, diarrhea.\n\nREVIEW OF SYSTEMS\n\n• Constitutional: Denies fever.\n\n• Cardiovascular: Endorses dyspnea on exertion.\n\n• Respiratory: Endorses shortness of breath and cough.\n\n• Gastrointestinal: Denies nausea or diarrhea.\n\n• Musculoskeletal: Endorses bilateral elbow and knee pain.\n\n• Psychiatric: Endorses depression.\n\nPHYSICAL EXAMINATION\n\n• Respiratory: Scattered rhonchi bilaterally, clears with cough.\n\n• Cardiovascular: No murmurs, gallops, or rubs. No extra heart sounds.\n\n• Musculoskeletal: Edema in the bilateral lower extremities. Pain to palpation of the bilateral elbows.\n\nRESULTS\n\nX-ray of the chest is unremarkable. No airspace disease. No signs of pneumonia.\n\nHemoglobin A1c is elevated at 8.\n\nASSESSMENT AND PLAN\n\nAndrew Campbell is a 59-year-old male with a past medical history significant for depression, type 2 diabetes, and hypertension. He presents today with an upper respiratory infection.\n\nUpper respiratory infection.\n\n• Medical Reasoning: I believe he has contracted a viral syndrome. His chest x-ray was unremarkable and he has received both doses of the COVID-19 vaccination.\n\n• Additional Testing: We will obtain a COVID-19 test to rule this out.\n\n• Medical Treatment: I recommend he use Robitussin for cough, as well as ibuprofen or Tylenol if he develops a fever.\n\nDepression.\n\n• Medical Reasoning: He has been practicing barre classes and is doing well overall.\n\n• Medical Treatment: I offered medication or psychotherapy, but the patient opted to defer at this time.\n\nDiabetes type 2.\n\n• Medical Reasoning: His blood glucose levels have been well controlled based on home monitoring, but his recent hemoglobin A1c was elevated.\n\n• Additional Testing: We will repeat a hemoglobin A1c in 4 months.\n\n• Medical Treatment: We will increase his metformin to 1000 mg twice daily.\n\nHypertension.\n\n• Medical Reasoning: He has been compliant with lisinopril and his blood pressures have been well controlled based on home monitoring.\n\n• Additional Testing: We will order a lipid panel.\n\n• Medical Treatment: He will continue on lisinopril 20 mg once daily. This was refilled today.\n\nFollow up: I would like to see him back in approximately 4 months.\n\nPatient Agreements: The patient understands and agrees with the recommended medical treatment plan.',
+        ]
+        self.cleaned_texts = [
+            'CHIEF COMPLAINT\n\nUpper respiratory infection.\n\nHISTORY OF PRESENT ILLNESS\n\nAndrew Campbell is a 59-year-old male with a past medical history significant for depression, type 2 diabetes, and hypertension. He presents today with an upper respiratory infection.\n\nThe patient reports that he has been doing a bit of work out in the yard in the last week or so. He started to feel really tired and short of breath. The patient denies coughing up anything, but he feels like he will soon be coughing up phlegm. He denies having a fever, but he felt a little warm. He attributed this to exerting himself. He reports that his elbows hurt quite a bit. He notes his knees were pretty tired and he felt some tension around his knees. The patient attributes these symptoms to lifting heavy bags. He has not been wearing a mask as much recently. He believes that he caught his first cold and his symptoms have worsened. He has had both of his COVID vaccinations.\n\nHe denies any history of seasonal allergies.\n\nRegarding his depression, he states it has been a crazy year and a half. He was a little concerned about that, but for the most part, he has been doing well with it. His wife got him into barre classes and this has been relaxing.\n\nRegarding his diabetes, he has been monitoring his sugar levels while he is at work, but is not as consistent on Saturdays and Sundays. His diet has been pretty good for the most part, except for some house parties. They have not been elevated since his respiratory symptoms began.\n\nThe patient has been monitoring his blood pressure at home. He reports that he is very regular with monitoring his blood pressure during the week, though less consistently on weekends. He reports his blood pressure has been under control. He has continued to utilize lisinopril 20 mg, daily.\n\nThe patient denies nausea, vomiting, diarrhea.\n\nREVIEW OF SYSTEMS\n\n• Constitutional: Denies fever.\n\n• Cardiovascular: Endorses dyspnea on exertion.\n\n• Respiratory: Endorses shortness of breath and cough.\n\n• Gastrointestinal: Denies nausea or diarrhea.\n\n• Musculoskeletal: Endorses bilateral elbow and knee pain.\n\n• Psychiatric: Endorses depression.\n\nPHYSICAL EXAMINATION\n\n• Respiratory: Scattered rhonchi bilaterally, clears with cough.\n\n• Cardiovascular: No murmurs, gallops, or rubs. No extra heart sounds.\n\n• Musculoskeletal: Edema in the bilateral lower extremities. Pain to palpation of the bilateral elbows.\n\nRESULTS\n\nX-ray of the chest is unremarkable. No airspace disease. No signs of pneumonia.\n\nHemoglobin A1c is elevated at 8.\n\nASSESSMENT AND PLAN\n\nAndrew Campbell is a 59-year-old male with a past medical history significant for depression, type 2 diabetes, and hypertension. He presents today with an upper respiratory infection.\n\nUpper respiratory infection.\n\n• Medical Reasoning: I believe he has contracted a viral syndrome. His chest x-ray was unremarkable and he has received both doses of the COVID-19 vaccination.\n\n• Additional Testing: We will obtain a COVID-19 test to rule this out.\n\n• Medical Treatment: I recommend he use Robitussin for cough, as well as ibuprofen or Tylenol if he develops a fever.\n\nDepression.\n\n• Medical Reasoning: He has been practicing barre classes and is doing well overall.\n\n• Medical Treatment: I offered medication or psychotherapy, but the patient opted to defer at this time.\n\nDiabetes type 2.\n\n• Medical Reasoning: His blood glucose levels have been well controlled based on home monitoring, but his recent hemoglobin A1c was elevated.\n\n• Additional Testing: We will repeat a hemoglobin A1c in 4 months.\n\n• Medical Treatment: We will increase his metformin to 1000 mg twice daily.\n\nHypertension.\n\n• Medical Reasoning: He has been compliant with lisinopril and his blood pressures have been well controlled based on home monitoring.\n\n• Additional Testing: We will order a lipid panel.\n\n• Medical Treatment: He will continue on lisinopril 20 mg once daily. This was refilled today.\n\nFollow up: I would like to see him back in approximately 4 months.\n\nPatient Agreements: The patient understands and agrees with the recommended medical treatment plan.',
+        ]
+        self.states = [
+            PipelineState(
+                doc_id='240503191033444EHGFED',
+                raw_input=self.raw_texts[0],
+                text=self.cleaned_texts[0],
+                is_pdf=False,
+                warnings=[],
+                trace=[],
+            ),
+        ]
+
+    def test_extract_entities(self):
+        for state in self.states:
+            entities = extract_entities(state)['entities']
+
+            print('\n\n===================')
+            for name, entity_type in entities.items():
+                print(name, '\n')
+                for e in entity_type:
+                    print(e, '\n')
+        pass
+        
+    def test_get_nlp(self):
+        pass
+
+
+if __name__ == '__main__':
+    unittest.main()

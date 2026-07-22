@@ -12,6 +12,14 @@ from src.utils.report import render_html, render_json
 
 TEXT_FILEPATH = 'data/raw_data/text.csv'
 DIAGNOSIS_FILEPATH = 'data/raw_data/diagnosis.csv'
+TEXT_HOLDOUT_FILEPATH = None
+DIAGNOSIS_HOLDOUT_FILEPATH = None
+
+# Number of rows to read from csv file. Default is None and loads entire file.
+TEXT_NROWS = 5
+DIAGNOSIS_NROWS = 10
+TEXT_HOLDOUT_NROWS = None
+DIAGNOSIS_HOLDOUT_NROWS = None
 
 def main():
     parser = argparse.ArgumentParser()
@@ -46,7 +54,10 @@ def main():
     if args.pdf:
         pass
     else:
-        notes = build_dataset(TEXT_FILEPATH, DIAGNOSIS_FILEPATH)
+        notes = build_dataset(
+            TEXT_FILEPATH, DIAGNOSIS_FILEPATH, TEXT_HOLDOUT_FILEPATH, DIAGNOSIS_HOLDOUT_FILEPATH,
+            TEXT_NROWS, DIAGNOSIS_NROWS, TEXT_HOLDOUT_NROWS, DIAGNOSIS_HOLDOUT_NROWS
+        )
         if args.note:
             jobs = [(args.note, notes[args.note], False)]
         else:

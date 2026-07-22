@@ -14,16 +14,37 @@ class ExampleClass:
 	evidences: list[str]
 
 
-def build_dataset(text_filepath, diagnosis_filepath) -> list[ExampleClass]:
+def build_dataset(
+		text_filepath: str,
+		diagnosis_filepath: str,
+		text_holdout_filepath: str=None,
+		diagnosis_holdout_filepath: str=None,
+		text_nrows: int | None=None,
+		diagnosis_nrows: int | None=None,
+		text_holdout_nrows: int | None=None,
+		diagnosis_holdout_nrows: int | None=None,
+	) -> list[ExampleClass]:
 	'''
-	Build a list of ExampleClass objects that represent each clinical case.
+	Build a list of ExampleClass objects that represent each clinical case from the MedCodER dataset.
 
 	Parameters
 	==========
 	text_filepath: str
-		Filepath to text.csv which contains clinical text records.
+		Filepath to text.csv which contains clinical text records, used as a test set.
 	diagnosis_filepath: str
-		Filepath to diagnosis.csv which contains ICD10 codes, diagnoses, and evidence text indices.
+		Filepath to diagnosis.csv which contains ICD10 codes, diagnoses, and evidence text indices, used as a test set.
+	text_holdout_filepath: str
+		Filepath to text_holdout.csv which contains clinical text records, used as a holdout set for user experiments.
+	diagnosis_holdout_filepath: str
+		Filepath to diagnosis_holdout.csv which contains ICD10 codes, diagnoses, and evidence text indices, used as a holdout set for user experiments.
+	text_nrows: int | None (default=None)
+		(Optional) Number of rows of text.csv file to read.
+	diagnosis_nrows: int | None (default=None)
+		(Optional) Number of rows of diagnosis.csv file to read.
+	text_holdout_nrows: int | None (default=None)
+		(Optional) Number of rows of text_holdout.csv file to read.
+	diagnosis_holdout_nrows: int | None (default=None)
+		(Optional) Number of rows of diagnosis_holdout.csv file to read.
 
 	Returns
 	=======
@@ -31,11 +52,13 @@ def build_dataset(text_filepath, diagnosis_filepath) -> list[ExampleClass]:
 		List containing examples of patient cases, represented by an ExampleClass object containing
 		these parameters: doc_id, medical_record_text, aci_doc_id, codes, diagnoses, starts, ends
 	'''
-	text_df = pd.read_csv(text_filepath, nrows=5)
-	diagnosis_df = pd.read_csv(diagnosis_filepath, nrows=10)
 
-	# print(text_df.iloc[0])
-	# print(text_df.index)
+
+	text_df = pd.read_csv(text_filepath, nrows=text_nrows)
+	diagnosis_df = pd.read_csv(diagnosis_filepath, nrows=diagnosis_nrows)
+	# text_holdout_df = pd.read_csv(text_holdout_filepath, nrows=text_holdout_nrows)
+	# diagnosis_holdout_df = pd.read_csv(diagnosis_holdout_filepath, nrows=diganosis_handout_nrows)
+
 
 	dataset = []
 	for _, text_row in text_df.iterrows():
