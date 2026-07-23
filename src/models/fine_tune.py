@@ -7,6 +7,7 @@ import json
 from peft import LoraConfig
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from trl import SFTConfig, SFTTrainer
+from dataset import load_dataset
 
 MODEL_NAME = "meta-llama/Llama-3.2-1B-Instruct"
 
@@ -14,38 +15,14 @@ DATA_DIR = "/users/hzheng29/data/hzheng29/my_clinical_fine_tuning/data/processed
 OUTPUT_DIR = "/users/hzheng29/data/hzheng29/my_clinical_fine_tuning/src/models/checkpoints/sft_lora"
 
 
-def _build_messages(example, state):
-    '''
-    Construct training/testing messages where the user content corresponds to the prompt
-    defined in code_agent.py and the assistant content corresponds to the target response.
-
-
-    '''
-    return {
-        "messages": [
-            {"role": "system", "content": _SYSTEM_PROMPT},
-            {"role": "user", "content": _build_prompt(state)},
-            {"role": "assistant", "content": _build_target(example)},
-        ],
-    }
-
-def _build_target(example: ExampleClass):
-    return json.dumps({
-        "codes": [
-            {
-                "diagnosis": diagnosis,
-                "icd10_code": code,
-                "reasoning": example.medical_record_text[start: end],
-                "llm_self_reported_confidence": "high"
-            } for code, diagnosis, start, end in list(zip(example.codes, example.diagnoses, example.starts, example.ends))
-        ] 
-    })
-
 def fine_tune(train_examples: list[ExampleClass], test_examples: list[ExampleClass]):
 
     # Load dataset
-    train_dataset = [_build_messages(example, (run_pipeline(None, example.medical_record_text, False))) for example in train_examples]
-    test_dataset = [_build_messages(example, (run_pipeline(None, example.medical_record_text, False))) for example in test_examples]
+    dataset = load_dataset("json", data_files={
+        "train": f"{DATA_DIR}/sft_train.jsonl",
+        "validation": f"{DATA_DIR}/sft_val.jsonl",
+    })
+
 
     tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
     model = AutoModelForCausalLM.from_pretrained(MODEL_NAME, dtype="auto", device_map="auto")
@@ -82,8 +59,8 @@ def fine_tune(train_examples: list[ExampleClass], test_examples: list[ExampleCla
     trainer = SFTTrainer(
         model=model,
         args=training_args,
-        train_dataset=train_dataset,
-        eval_dataset=test_dataset,
+        train_dataset=dataset['train'],
+        eval_dataset=dataset['validation'],
         processing_class=tokenizer,
         peft_config=lora_config,
     )

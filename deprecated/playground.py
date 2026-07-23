@@ -1,20 +1,26 @@
-import pandas as pd
+import requests
 
-
-d = {
-    'row1': {
-        'A': 1, 'B': 2, 'C': 3
-    },
-    'row2': {
-        'A': 4, 'B': 5, 'C': 6
-    },
-    'row3': {
-        'A': 7, 'B': 8, 'C': 9
-    }
+url = 'https://clinicaltables.nlm.nih.gov/api/icd10cm/v3/search'
+params = {
+    'sf': 'code,name',
+    'terms': 'F32.9'
 }
 
-df = pd.DataFrame.from_dict(d, orient='index')
+try:
+    response = requests.get(url, params=params)
+    data = response.json()
+    n_matches = data[0]
+    codes = data[1]
+    results = data[3]
+    print(f'\n{n_matches}\n{codes}\n{results}')
+except Exception as e:
+    print(f'An error occured: {e}')
 
-for row in df.itertuples():
-    print(row)
-    print(f"Index: {row.Index}, A: {row.A}, B: {row.B}, C: {row.C}")
+
+'''
+Returns
+========
+1
+['F32.9']
+[['F32.9', 'Major depressive disorder, single episode, unspecified']]
+'''
