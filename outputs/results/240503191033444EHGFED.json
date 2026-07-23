@@ -1,0 +1,112 @@
+{
+  "doc_id": "240503191033444EHGFED",
+  "sections": [
+    "chief_complaint",
+    "history_of_present_illness",
+    "review_of_systems",
+    "physical_examination",
+    "results",
+    "assessment_and_plan"
+  ],
+  "entities": {
+    "PROBLEM": [
+      {
+        "text": "depression",
+        "label": "PROBLEM",
+        "negated": false,
+        "is_family": false,
+        "is_historical": true
+      },
+      {
+        "text": "diabetes",
+        "label": "PROBLEM",
+        "negated": false,
+        "is_family": false,
+        "is_historical": true
+      },
+      {
+        "text": "hypertension",
+        "label": "PROBLEM",
+        "negated": false,
+        "is_family": false,
+        "is_historical": true
+      },
+      {
+        "text": "pneumonia",
+        "label": "PROBLEM",
+        "negated": true,
+        "is_family": false,
+        "is_historical": false
+      }
+    ],
+    "MEDICATION": [
+      {
+        "text": "lisinopril",
+        "label": "MEDICATION",
+        "negated": false,
+        "is_family": false,
+        "is_historical": false
+      },
+      {
+        "text": "metformin",
+        "label": "MEDICATION",
+        "negated": false,
+        "is_family": false,
+        "is_historical": false
+      }
+    ],
+    "PROCEDURE": []
+  },
+  "codes": [
+    {
+      "diagnosis": "depression",
+      "icd10_code": "F32.9",
+      "icd10_description": "Mild depressive episode",
+      "reasoning": "The patient has been practicing barre classes and is doing well overall, indicating a mild depressive episode.",
+      "llm_self_reported_confidence": "high"
+    },
+    {
+      "diagnosis": "diabetes",
+      "icd10_code": "E11.9",
+      "icd10_description": "Type 2 diabetes mellitus with hyperglycemia",
+      "reasoning": "The patient has type 2 diabetes, and his recent hemoglobin A1c was elevated, indicating hyperglycemia.",
+      "llm_self_reported_confidence": "high"
+    },
+    {
+      "diagnosis": "hypertension",
+      "icd10_code": "I10",
+      "icd10_description": "Hypertensive heart disease",
+      "reasoning": "The patient has been compliant with lisinopril and his blood pressures have been well controlled, indicating hypertensive heart disease.",
+      "llm_self_reported_confidence": "high"
+    }
+  ],
+  "evidence": [
+    {
+      "diagnosis": "depression",
+      "icd10_code": "F32.9",
+      "supporting_quote": "HISTORY OF PRESENT ILLNESS\n\nAndrew Campbell is a 59-year-old male with a past medical history significant for depression, type 2 diabetes, and hypertension.",
+      "match_score": 1.0,
+      "verified": true
+    },
+    {
+      "diagnosis": "diabetes",
+      "icd10_code": "E11.9",
+      "supporting_quote": "HISTORY OF PRESENT ILLNESS\n\nAndrew Campbell is a 59-year-old male with a past medical history significant for depression, type 2 diabetes, and hypertension.",
+      "match_score": 1.0,
+      "verified": true
+    },
+    {
+      "diagnosis": "hypertension",
+      "icd10_code": "I10",
+      "supporting_quote": "HISTORY OF PRESENT ILLNESS\n\nAndrew Campbell is a 59-year-old male with a past medical history significant for depression, type 2 diabetes, and hypertension.",
+      "match_score": 1.0,
+      "verified": true
+    }
+  ],
+  "confidence": {
+    "F32.9": 1.0,
+    "E11.9": 1.0,
+    "I10": 1.0
+  },
+  "warnings": []
+}

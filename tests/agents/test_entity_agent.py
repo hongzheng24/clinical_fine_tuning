@@ -34,6 +34,8 @@ class TestBuildDataset(unittest.TestCase):
         for state in self.states:
             entities = extract_entities(state)['entities']
 
+            print(entities)
+
             print('\n\n===================')
             for name, entity_type in entities.items():
                 print(name, '\n')

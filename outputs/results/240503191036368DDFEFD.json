@@ -1,0 +1,20 @@
+{
+  "doc_id": "240503191036368DDFEFD",
+  "sections": [
+    "cc",
+    "hpe",
+    "exam",
+    "results",
+    "impression",
+    "plan"
+  ],
+  "entities": {
+    "PROBLEM": [],
+    "MEDICATION": [],
+    "PROCEDURE": []
+  },
+  "codes": [],
+  "evidence": [],
+  "confidence": {},
+  "warnings": []
+}

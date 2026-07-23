@@ -8,3 +8,5 @@ medspacy>=1.3.0
 pdfplumber>=0.11.0
 pdf2image>=1.17.0
 pytesseract>=0.3.10
+numpy=1.26.4
+# scikit-learn

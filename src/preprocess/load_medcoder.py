@@ -19,10 +19,10 @@ def build_dataset(
 		diagnosis_filepath: str,
 		text_holdout_filepath: str=None,
 		diagnosis_holdout_filepath: str=None,
-		text_nrows: int | None=None,
-		diagnosis_nrows: int | None=None,
-		text_holdout_nrows: int | None=None,
-		diagnosis_holdout_nrows: int | None=None,
+		text_nrows: int=None,
+		diagnosis_nrows: int=None,
+		text_holdout_nrows: int=None,
+		diagnosis_holdout_nrows: int=None,
 	) -> list[ExampleClass]:
 	'''
 	Build a list of ExampleClass objects that represent each clinical case from the MedCodER dataset.

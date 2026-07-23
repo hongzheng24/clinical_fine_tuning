@@ -1,0 +1,21 @@
+{
+  "doc_id": "240503191035602IAFHDG",
+  "sections": [
+    "chief_complaint",
+    "history_of_present_illness",
+    "review_of_systems",
+    "physical_examination",
+    "results",
+    "assessment",
+    "plan"
+  ],
+  "entities": {
+    "PROBLEM": [],
+    "MEDICATION": [],
+    "PROCEDURE": []
+  },
+  "codes": [],
+  "evidence": [],
+  "confidence": {},
+  "warnings": []
+}

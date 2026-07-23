@@ -103,6 +103,7 @@ class TestBuildDataset(unittest.TestCase):
             sections = detect_sections(state)['sections']
             section_titles = list(sections.keys())
 
+            print(detect_sections(state), '\n\n\n\n\n')
             # print(f'\n============\n{section_titles}\n{true_section_titles}')
 
             self.assertEqual(len(section_titles), len(true_section_titles))

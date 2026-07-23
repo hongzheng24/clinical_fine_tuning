@@ -14,8 +14,13 @@ DATA_DIR = "/users/hzheng29/data/hzheng29/my_clinical_fine_tuning/data/processed
 OUTPUT_DIR = "/users/hzheng29/data/hzheng29/my_clinical_fine_tuning/src/models/checkpoints/sft_lora"
 
 
-
 def _build_messages(example, state):
+    '''
+    Construct training/testing messages where the user content corresponds to the prompt
+    defined in code_agent.py and the assistant content corresponds to the target response.
+
+
+    '''
     return {
         "messages": [
             {"role": "system", "content": _SYSTEM_PROMPT},
@@ -25,7 +30,6 @@ def _build_messages(example, state):
     }
 
 def _build_target(example: ExampleClass):
-
     return json.dumps({
         "codes": [
             {
@@ -84,10 +88,13 @@ def fine_tune(train_examples: list[ExampleClass], test_examples: list[ExampleCla
         peft_config=lora_config,
     )
 
-    trainer.train()
+    model = trainer.train()
     trainer.save_model(OUTPUT_DIR)  # saves the LoRA adapter, not a full model copy
     print(f"adapter saved to {OUTPUT_DIR}")
-    return
+    return {
+        'model': model,
+        'loss': model.training_loss()
+    }
 
 
 def main():

@@ -14,7 +14,8 @@ class TestBuildDataset(unittest.TestCase):
     def setUp(self):
         pass
 
-    def test(self)
+    def test(self):
+        pass
 
 
 if __name__ == '__main__':

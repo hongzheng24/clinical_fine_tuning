@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>Coding Review -- 240503191034168BAEHHG</title>
+<style>
+body { font-family: -apple-system, Segoe UI, sans-serif; max-width: 900px; margin: 40px auto; color: #1a1a1a; line-height: 1.5; }
+h1 { font-size: 22px; }
+h2 { font-size: 16px; color: #444; margin-top: 32px; }
+.card { border: 1px solid #ddd; border-radius: 8px; padding: 16px; margin-bottom: 14px; }
+.high { border-left: 6px solid #2e7d32; }
+.medium { border-left: 6px solid #f9a825; }
+.low { border-left: 6px solid #c62828; background: #fff6f6; }
+.code { font-weight: 600; font-size: 15px; }
+.quote { font-style: italic; color: #333; background: #f7f7f7; padding: 8px 10px; border-radius: 4px; margin-top: 6px; }
+.missing-quote { color: #c62828; font-weight: 500; }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 12px; font-weight: 600; color: white; }
+.badge.high { background: #2e7d32; border: none; }
+.badge.medium { background: #f9a825; border: none; }
+.badge.low { background: #c62828; border: none; }
+.warnings { background: #fff3cd; border: 1px solid #ffe08a; border-radius: 6px; padding: 12px; margin-top: 20px; }
+.trace { font-family: monospace; font-size: 12px; color: #555; white-space: pre-wrap; background: #fafafa; padding: 12px; border-radius: 6px; }
+.section-body { white-space: pre-wrap; background: #fafafa; padding: 10px; border-radius: 6px; font-size: 13px; }
+</style></head>
+<body>
+<h1>Agentic Clinical Coding Review</h1>
+<p><strong>Document:</strong> 240503191034168BAEHHG</p>
+
+<h2>Suggested Codes (1)</h2>
+
+        <div class="card high">
+          <div class="code">I48.9 &mdash; Atrial fibrillation, unspecified
+            <span class="badge high">1.00 confidence</span>
+          </div>
+          <div><strong>Diagnosis:</strong> atrial fibrillation</div>
+          <div><strong>Reasoning:</strong> The patient continues to experience episodes of palpitations, and her recent cardiac event monitor demonstrated a conversion pause.</div>
+          <div class="quote">"HISTORY OF PRESENT ILLNESS
+
+Andrea Roberts is a 52-year-old female with a past medical history significant for rheumatoid arthritis, atrial fibrillation, and reflux, who presents today for her annual exam."</div>
+        </div>
+        
+
+
+
+<h2>Detected Sections</h2>
+<h2>chief_complaint</h2><div class="section-body">Annual exam.</div><h2>history_of_present_illness</h2><div class="section-body">Andrea Roberts is a 52-year-old female with a past medical history significant for rheumatoid arthritis, atrial fibrillation, and reflux, who presents today for her annual exam. It has been a year since she was last seen.
+
+The patient states she is doing well. She has been walking, exercising, and doing yoga, which has helped with her arthritis. She denies issues with stiffness, pain, or flare ups over the last year. The patient has continued utilizing methotrexate 2.5 mg once a week and denies issues with that.
+
+In terms of her atrial fibrillation, she endorses continued palpitations. The last episode she had was about 1 week ago. She has noticed that when she starts to get stressed they start to flare up again. She has tried meditation and running with her dog for stress relief, however these have not been helpful. The patient had called last month and had an event monitor done.
+
+Regarding her GERD, she has continued to utilize Protonix 40 mg a day. The patient has cut out soda, which seemed to help. She has not had a flare up in over 5 months.
+
+The patient endorses nasal congestion because of her allergies. She denies chest pain, shortness of breath, nausea, and vomitting.</div><h2>review_of_systems</h2><div class="section-body">• Ears, Nose, Mouth and Throat: Endorses nasal congestion from allergies.
+
+• Cardiovascular: Denies chest pain or dyspnea. Endorses palpitations.
+
+• Respiratory: Denies shortness of breath.
+
+• Musculoskeletal: Denies joint pain.</div><h2>physical_examination</h2><div class="section-body">• Respiratory: Lungs are clear to auscultation bilaterally. No wheezes, rales, or rhonchi.
+
+• Cardiovascular: Regular rate and rhythm. Slight 2/6 systolic ejection murmur.
+
+• Musculoskeletal: No lower extremity edema. Edema and erythema of the right elbow. Pain to palpation of the right elbow.</div><h2>results</h2><div class="section-body">Event monitor: Positive for conversion pause.
+
+Autoimmune panel: Normal. Well controlled rheumatoid arthritis.</div><h2>assessment_and_plan</h2><div class="section-body">Andrea Roberts is a 52-year-old female with a past medical history significant for rheumatoid arthritis, atrial fibrillation, and reflux, who presents today for her annual exam. It has been a year since she was last seen.
+
+Rheumatoid arthritis.
+
+• Medical Reasoning: The patient has remained active and has been compliant with methotrexate once weekly. Her recent autoimmune panel was normal.
+
+• Medical Treatment: She will continue on methotrexate 2.5 mg once weekly. This was refilled today.
+
+• Specialist Referrals: If she needs a referral back to the rheumatologist, she will let me know.
+
+Atrial fibrillation.
+
+• Medical Reasoning: She continues to experience episodes of palpitations. Her most recent episode was about 1 week ago. She is in normal sinus rhythm today, but her recent cardiac event monitor demonstrated a conversion pause.
+
+• Specialist Referrals: We will refer her to cardiology for a cardiac ablation.
+
+GERD.
+
+• Medical Reasoning: She has been compliant with dietary modifications and denies any episodes in approximately 5 months.
+
+• Medical Treatment: Continue on Protonix 40 mg daily.
+
+• Patient Education and Counseling: She could continue with dietary modifications and avoid known dietary triggers.
+
+Patient Agreements: The patient understands and agrees with the recommended medical treatment plan.</div>
+
+<h2>Agent Trace (pipeline log)</h2>
+<div class="trace">[DocumentAgent] loaded raw text input (no OCR needed)
+[SectionAgent] detected 6 section(s): [&#x27;chief_complaint&#x27;, &#x27;history_of_present_illness&#x27;, &#x27;review_of_systems&#x27;, &#x27;physical_examination&#x27;, &#x27;results&#x27;, &#x27;assessment_and_plan&#x27;]
+[EntityAgent] extracted 1 active entities, 0 negated (excluded from coding)
+[CodingAgent] LLM suggested 1 ICD-10 code(s)
+[VerificationAgent] verified 1/1 suggested code(s) against source text
+[ConfidenceAgent] scored 1 code(s); flagged 0 for mandatory review</div>
+
+</body></html>

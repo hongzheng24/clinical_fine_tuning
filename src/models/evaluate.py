@@ -1,5 +1,5 @@
 import pandas as pd
-from __future__ import annotations
+# from __future__ import annotations
 
 import re
 from dataclasses import dataclass, field
@@ -9,7 +9,7 @@ from src.utils.state import PipelineState
 from sklearn.calibration import calibration_curve
 from sklearn.metrics import brier_score_loss, precision_recall_fscore_support
 from sklearn.preprocessing import MultiLabelBinarizer
-from src.preprocess.load_asclepius import ExampleClass
+from src.preprocess.load_medcoder import ExampleClass
 
 
 
@@ -33,7 +33,7 @@ def multilabel_metrics(true_codes: list[list[str]], pred_codes: list[list[str]])
     assert len(true_codes) == len(pred_codes)
 
     mlb = MultiLabelBinarizer().fit(true_codes + pred_codes)
-    y_true, y_pred = mlb.fit_transform(true_codes), mlb.fit_transform(pred_codes)
+    y_true, y_pred = mlb.transform(true_codes), mlb.transform(pred_codes)
     
     micro_p, micro_r, micro_f1, _ = precision_recall_fscore_support(
         y_true, y_pred, average='micro', zero_division=0

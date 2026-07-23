@@ -1,0 +1,46 @@
+{
+  "doc_id": "240503191034168BAEHHG",
+  "sections": [
+    "chief_complaint",
+    "history_of_present_illness",
+    "review_of_systems",
+    "physical_examination",
+    "results",
+    "assessment_and_plan"
+  ],
+  "entities": {
+    "PROBLEM": [
+      {
+        "text": "atrial fibrillation",
+        "label": "PROBLEM",
+        "negated": false,
+        "is_family": false,
+        "is_historical": true
+      }
+    ],
+    "MEDICATION": [],
+    "PROCEDURE": []
+  },
+  "codes": [
+    {
+      "diagnosis": "atrial fibrillation",
+      "icd10_code": "I48.9",
+      "icd10_description": "Atrial fibrillation, unspecified",
+      "reasoning": "The patient continues to experience episodes of palpitations, and her recent cardiac event monitor demonstrated a conversion pause.",
+      "llm_self_reported_confidence": "high"
+    }
+  ],
+  "evidence": [
+    {
+      "diagnosis": "atrial fibrillation",
+      "icd10_code": "I48.9",
+      "supporting_quote": "HISTORY OF PRESENT ILLNESS\n\nAndrea Roberts is a 52-year-old female with a past medical history significant for rheumatoid arthritis, atrial fibrillation, and reflux, who presents today for her annual exam.",
+      "match_score": 1.0,
+      "verified": true
+    }
+  ],
+  "confidence": {
+    "I48.9": 1.0
+  },
+  "warnings": []
+}
