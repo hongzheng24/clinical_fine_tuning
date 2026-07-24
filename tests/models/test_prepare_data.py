@@ -1,24 +1,67 @@
-from src.utils.state import PipelineState
-
-# Run test: <python -m tests.test>
-# <python -m unittest discover -s tests>
+# python -m tests...
 # python -m unittest discover -s tests
 
 import unittest
 from src.preprocess.load_medcoder import build_dataset, ExampleClass
-from src.models.fine_tune import _build_messages, _build_target, fine_tune
+from src.utils.pipeline import PipelineState
+from src.models.prepare_data import _build_messages, _build_target, _get_code_description
 from src.agents.coding_agent import _SYSTEM_PROMPT, _build_prompt
 from src.utils.state import PipelineState
 from src.utils.pipeline import run_pipeline
 
+import requests
 import json
 
-TEXT_FILEPATH = '/users/hzheng29/data/hzheng29/my_clinical_fine_tuning/data/raw_data/text.csv'
-DIAGNOSIS_FILEPATH = '/users/hzheng29/data/hzheng29/my_clinical_fine_tuning/data/raw_data/diagnosis.csv'
+TEXT_FILEPATH = 'data/raw_data/text.csv'
+DIAGNOSIS_FILEPATH = 'data/raw_data/diagnosis.csv'
+TEXT_HOLDOUT_FILEPATH = 'data/raw_data/text_holdout.csv'
+DIAGNOSIS_HOLDOUT_FILEPATH = 'data/raw_data/diagnosis_holdout.csv'
+OUT_DIR = '/users/hzheng29/data/hzheng29/my_clinical_fine_tuning/data/fine_tune_data'
+ICD10_API_URL = 'https://clinicaltables.nlm.nih.gov/api/icd10cm/v3/search'
 
-dataset = build_dataset(TEXT_FILEPATH, DIAGNOSIS_FILEPATH, None, None, 6, 20, None, None)
- 
-class TestFineTuneDataProcessing(unittest.TestCase):
+dataset = build_dataset(TEXT_FILEPATH, DIAGNOSIS_FILEPATH, 5, 10)
+
+class TestPrepareData(unittest.TestCase):
+    def setUp(self):
+        pass
+
+    def test_get_code_description_api(self):
+        params = {
+            'sf': 'code,name',
+            'terms': 'F32.9'
+        }
+        try:
+            response = requests.get(ICD10_API_URL, params=params)
+            data = response.json()
+            num_matches = data[0]
+            codes = data[1]
+            results = data[3]
+            # print(f'\n{num_matches}\n{codes}\n{results}')
+        except Exception as e:
+            print(f'An error occured: {e}')
+
+        self.assertEqual(num_matches, 1)
+        self.assertEqual(codes[0], 'F32.9')
+        self.assertEqual(results[0], ['F32.9', 'Major depressive disorder, single episode, unspecified'])
+
+    def test_get_code_description_fn(self):
+
+        res = _get_code_description('F32.9')
+        self.assertEqual(res['num_matches'], 1)
+        self.assertEqual(res['code'], 'F32.9')
+        self.assertEqual(res['description'], 'Major depressive disorder, single episode, unspecified')
+        pass
+
+    def test_write_json(self):
+        pass
+
+    def test_prepare(self):
+        pass
+
+dataset = build_dataset(TEXT_FILEPATH, DIAGNOSIS_FILEPATH, 6, 20)
+
+
+class TestFineBuildMessages(unittest.TestCase):
     def setUp(self):
         # For example 0
         self.example: ExampleClass = dataset[0]
@@ -83,24 +126,28 @@ class TestFineTuneDataProcessing(unittest.TestCase):
                 {
                     'diagnosis': 'Upper respiratory infection',
                     'icd10_code': 'J06.9',
+                    'icd10_description': 'Acute upper respiratory infection, unspecified',
                     'reasoning': 'Upper respiratory infection', # TODO: Find exact reasoning text, Does \n char effect reasoning text?
                     'llm_self_reported_confidence': 'high'
                 },
                 {
                     'diagnosis': 'Depression',
                     'icd10_code': 'F32.A',
+                    'icd10_description': 'Depression, unspecified',
                     'reasoning': 'Depression',
                     'llm_self_reported_confidence': 'high'
                 },
                 {
                     'diagnosis': 'Diabetes type 2',
                     'icd10_code': 'E11.9',
+                    'icd10_description': 'Type 2 diabetes mellitus without complications',
                     'reasoning': 'Diabetes type 2',
                     'llm_self_reported_confidence': 'high'
                 },
                 {
                     'diagnosis': 'Hypertension',
                     'icd10_code': 'I10',
+                    'icd10_description': 'Essential (primary) hypertension',
                     'reasoning': 'Hypertension',
                     'llm_self_reported_confidence': 'high'
                 }
@@ -113,56 +160,13 @@ class TestFineTuneDataProcessing(unittest.TestCase):
     def test_build_messages(self):
         '''Test that _build_messages() creates the correct message format for '''
         # print(self.prompt_0)
-        true_messages = {
-            "messages": [
-                {"role": "system", "content": 'You are a clinical coding assistant supporting a human medical coder. You will be given clinical entities already extracted from a note (problems, medications, procedures), each marked as negated or not. You must NOT invent findings that are not in the provided entity list or section text.\n\n For each ACTIVE (non-negated) problem, suggest one plausible ICD-10-CM code. If you are not confident of the exact code, give your best general-category code and say so in the reasoning.\n\n ICD-10-CM codes must be formatted exactly as standard ICD-10-CM codes: - Use uppercase letters and digits only, with no spaces or extra punctuation. - The code must start with 1 letter followed by 2 digits. - If the code has more than 3 characters, place a decimal point after the first 3 characters. - Do not add leading zeros, trailing zeros, or any unlisted characters. - Valid examples: I10, E11.9, J44.9, Z79.4 - Invalid examples: e119, E11 9, E11-9, 11.9, E11.90\n\n Return ONLY valid JSON, no markdown fences, no preamble, matching this shape: { "codes": [ { "diagnosis": "string, the clinical concept", "icd10_code": "string", "icd10_description": "string", "reasoning": "string, 1-2 sentences, must reference only the given entities/sections", "llm_self_reported_confidence": "high" | "medium" | "low" } ] }'},
-                {"role": "user", "content": '''{'messages': [{'role': 'system', 'content': 'You are a clinical coding assistant supporting a human medical coder.\nYou will be given clinical entities already extracted from a note (problems,\nmedications, procedures), each marked as negated or not. You must NOT invent\nfindings that are not in the provided entity list or section text.\n\nFor each ACTIVE (non-negated) problem, suggest one plausible ICD-10-CM code.\nIf you are not confident of the exact code, give your best general-category\ncode and say so in the reasoning.\n\nICD-10-CM codes must be formatted exactly as standard ICD-10-CM codes:\n- Use uppercase letters and digits only, with no spaces or extra punctuation.\n- The code must start with 1 letter followed by 2 digits.\n- If the code has more than 3 characters, place a decimal point after the first 3 characters.\n- Do not add leading zeros, trailing zeros, or any unlistedcharacters.\n- Valid examples: I10, E11.9, J44.9, Z79.4\n- Invalid examples: e119, E11 9, E11-9, 11.9, E11.90\n\nReturn ONLY valid JSON, no markdown fences, no preamble, matching this shape:\n{\n  "codes": [\n    {\n\t\t"diagnosis": "string, the clinical concept",\n\t\t"icd10_code": "string",\n\t\t"icd10_description": "string",\n\t\t"reasoning": "string, 1-2 sentences, must reference only the given entities/sections",\n\t\t"llm_self_reported_confidence": "high" | "medium" | "low"\n    }\n  ]\n}\n'}, {'role': 'user', 'content': '\n\t\tACTIVE PROBLEMS (extracted, not negated):\n\t\t[\n  "depression",\n  "diabetes",\n  "hypertension"\n]\n\n\t\tEXPLICITLY NEGATED / RULED-OUT (do NOT code these):\n\t\t[\n  "pneumonia"\n]\n\n\t\tMEDICATIONS ON RECORD:\n\t\t[\n  "lisinopril",\n  "metformin"\n]\n\n\t\tPROCEDURES ON RECORD:\n\t\t[]\n\n\t\tRELEVANT NOTE TEXT (Assessment/Plan or main body):\n\t\tAndrew Campbell is a 59-year-old male with a past medical history significant for depression, type 2 diabetes, and hypertension. He presents today with an upper respiratory infection.\n\nUpper respiratory infection.\n\n• Medical Reasoning: I believe he has contracted a viral syndrome. His chest x-ray was unremarkable and he has received both doses of the COVID-19 vaccination.\n\n• Additional Testing: We will obtain a COVID-19 test to rule this out.\n\n• Medical Treatment: I recommend he use Robitussin for cough, as well as ibuprofen orTylenol if he develops a fever.\n\nDepression.\n\n• Medical Reasoning: He has been practicing barre classes and is doing well overall.\n\n• Medical Treatment: I offered medicationor psychotherapy, but the patient opted to defer at this time.\n\nDiabetes type 2.\n\n• Medical Reasoning: His blood glucose levels have been well controlled based on home monitoring, but his recent hemoglobin A1c was elevated.\n\n• Additional Testing: We will repeat a hemoglobin A1c in 4 months.\n\n• Medical Treatment: We will increase his metformin to 1000 mg twice daily.\n\nHypertension.\n\n• Medical Reasoning: He has been compliant with lisinopril and his blood pressures have been well controlled based on home monitoring.\n\n• Additional Testing: We will order a lipid panel.\n\n• Medical Treatment: He will continue on lisinopril 20 mg once daily. This was refilled today.\n\nFollow up: I would like to see him back in approximately 4 months.\n\nPatient Agreements: The patient understands and agrees with the recommended medical treatment plan.\n\t'}, {'role': 'assistant', 'content': '{"codes": [{"diagnosis": "Upper respiratory infection", "icd10_code": "J06.9", "reasoning": "Upper respiratory infection", "llm_self_reported_confidence": "high"}, {"diagnosis": "Depression", "icd10_code": "F32.A", "reasoning": "Depression", "llm_self_reported_confidence": "high"}, {"diagnosis": "Diabetes type 2", "icd10_code": "E11.9", "reasoning": "Diabetestype 2", "llm_self_reported_confidence": "high"}, {"diagnosis": "Hypertension", "icd10_code": "I10", "reasoning": "Hypertension", "llm_self_reported_confidence": "high"}]}'}]}'''},
-                {"role": "assistant", "content": json.dumps({
-                    'codes': [
-                        {
-                            'diagnosis': 'Upper respiratory infection',
-                            'icd10_code': 'J06.9',
-                            'reasoning': 'Upper respiratory infection', # TODO: Find exact reasoning text, Does \n char effect reasoning text?
-                            'llm_self_reported_confidence': 'high'
-                        },
-                        {
-                            'diagnosis': 'Depression',
-                            'icd10_code': 'F32.A',
-                            'reasoning': 'Depression',
-                            'llm_self_reported_confidence': 'high'
-                        },
-                        {
-                            'diagnosis': 'Diabetes type 2',
-                            'icd10_code': 'E11.9',
-                            'reasoning': 'Diabetes type 2',
-                            'llm_self_reported_confidence': 'high'
-                        },
-                        {
-                            'diagnosis': 'Hypertension',
-                            'icd10_code': 'I10',
-                            'reasoning': 'Hypertension',
-                            'llm_self_reported_confidence': 'high'
-                        }
-                    ]
-
-                })},
-            ]
-        }
+        true_messages = {'messages': [{'role': 'system', 'content': 'You are a clinical coding assistant supporting a human medical coder.\nYou will be given clinical entities already extracted from a note (problems,\nmedications, procedures), each marked as negated or not. You must NOT invent\nfindings that are not in the provided entity list or section text.\n\nFor each ACTIVE (non-negated) problem, suggest one plausible ICD-10-CM code.\nIf you are not confident of the exact code, give your best general-category\ncode and say so in the reasoning.\n\nICD-10-CM codes must be formatted exactly as standard ICD-10-CM codes:\n- Use uppercase letters and digits only, with no spaces or extra punctuation.\n- The code must start with 1 letter followed by 2 digits.\n- If the code has more than 3 characters, place a decimal point after the first 3 characters.\n- Do not add leading zeros, trailing zeros, or any unlisted characters.\n- Valid examples: I10, E11.9, J44.9, Z79.4\n- Invalid examples: e119, E11 9, E11-9, 11.9, E11.90\n\nReturn ONLY valid JSON, no markdown fences, no preamble, matching this shape:\n{\n  "codes": [\n    {\n\t\t"diagnosis": "string, the clinical concept",\n\t\t"icd10_code": "string",\n\t\t"icd10_description": "string",\n\t\t"reasoning": "string, 1-2 sentences, must reference only the given entities/sections",\n\t\t"llm_self_reported_confidence": "high" | "medium" | "low"\n    }\n  ]\n}\n'}, {'role': 'user', 'content': '\n\t\tACTIVE PROBLEMS (extracted, not negated):\n\t\t[\n  "depression",\n  "diabetes",\n  "hypertension"\n]\n\n\t\tEXPLICITLY NEGATED / RULED-OUT (do NOT code these):\n\t\t[\n  "pneumonia"\n]\n\n\t\tMEDICATIONS ON RECORD:\n\t\t[\n  "lisinopril",\n  "metformin"\n]\n\n\t\tPROCEDURES ON RECORD:\n\t\t[]\n\n\t\tRELEVANT NOTE TEXT (Assessment/Plan or main body):\n\t\tAndrew Campbell is a 59-year-old male with a past medical history significant for depression, type 2 diabetes, and hypertension. He presents today with an upper respiratory infection.\n\nUpper respiratory infection.\n\n• Medical Reasoning: I believe he has contracted a viral syndrome. His chest x-ray was unremarkable and he has received both doses of the COVID-19 vaccination.\n\n• Additional Testing: We will obtain a COVID-19 test to rule this out.\n\n• Medical Treatment: I recommend he use Robitussin for cough, as well as ibuprofen or Tylenol if he develops a fever.\n\nDepression.\n\n• Medical Reasoning: He has been practicing barre classes and is doing well overall.\n\n• Medical Treatment: I offered medication or psychotherapy, but the patient opted to defer at this time.\n\nDiabetes type 2.\n\n• Medical Reasoning: His blood glucose levels have been well controlled based on home monitoring, but his recent hemoglobin A1c was elevated.\n\n• Additional Testing: We will repeat a hemoglobin A1c in 4 months.\n\n• Medical Treatment: We will increase his metformin to 1000 mg twice daily.\n\nHypertension.\n\n• Medical Reasoning: He has been compliant with lisinopril and his blood pressures have been well controlled based on home monitoring.\n\n• Additional Testing: We will order a lipid panel.\n\n• Medical Treatment: He will continue on lisinopril 20 mg once daily. This was refilled today.\n\nFollow up: I would like to see him back in approximately 4 months.\n\nPatient Agreements: The patient understands and agrees with the recommended medical treatment plan.\n\t'}, {'role': 'assistant', 'content': '{"codes": [{"diagnosis": "Upper respiratory infection", "icd10_code": "J06.9", "icd10_description": "Acute upper respiratory infection, unspecified", "reasoning": "Upper respiratory infection", "llm_self_reported_confidence": "high"}, {"diagnosis": "Depression", "icd10_code": "F32.A", "icd10_description": "Depression, unspecified", "reasoning": "Depression", "llm_self_reported_confidence": "high"}, {"diagnosis": "Diabetes type 2", "icd10_code": "E11.9", "icd10_description": "Type 2 diabetes mellitus without complications", "reasoning": "Diabetes type 2", "llm_self_reported_confidence": "high"}, {"diagnosis": "Hypertension", "icd10_code": "I10", "icd10_description": "Essential (primary) hypertension", "reasoning": "Hypertension", "llm_self_reported_confidence": "high"}]}'}]} 
         print('\n\n=======\n\n', str(self.messages), '\n\n\n======\n\n', str(true_messages))
         self.assertEqual(
             self.messages, true_messages
         )
         pass
 
-class TestFineTuneSFTTraining(unittest.TestCase):
-    def setUp(self):
-        pass
-
-    def testSFTTrainer(self):
-        res = fine_tune(dataset[:3], dataset[3:])
-        print(res.loss, '\n')
-        print(res.model)
-        pass
 
 if __name__ == '__main__':
     unittest.main()

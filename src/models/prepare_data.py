@@ -37,7 +37,8 @@ def _get_code_description(code: str) -> dict[str, str]:
     '''
     params = {
         'sf': 'code,name',
-        'terms': code
+        'terms': code,
+        'maxList': 1
     }
     try:
         response = requests.get(ICD10_API_URL, params=params)
@@ -51,8 +52,8 @@ def _get_code_description(code: str) -> dict[str, str]:
 
     return {
         'num_matches': num_matches,
-        'codes': codes,
-        'results': results
+        'code': codes[0],
+        'description': results[0][1]
     }
 
 
@@ -100,7 +101,7 @@ def _build_target(example: ExampleClass) -> dict:
             {
                 "diagnosis": diagnosis,
                 "icd10_code": code,
-                "icd10_description": _get_code_description(code),
+                "icd10_description": _get_code_description(code)['description'],
                 "reasoning": example.medical_record_text[start: end],
                 "llm_self_reported_confidence": "high"
             } for code, diagnosis, start, end in list(zip(example.codes, example.diagnoses, example.starts, example.ends))

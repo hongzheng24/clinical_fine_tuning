@@ -1,4 +1,8 @@
+# Start gpu interact session: <interact -q gpu -g 2 -t 2:00:00>
+# Activate conda env: <conda activate clinical-fine-tuning>
 
+# export LD_LIBRARY_PATH=/users/hzheng29/.conda/envs/clinical-fine-tuning/lib:$LD_LIBRARY_PATH
+# export LD_PRELOAD=/users/hzheng29/.conda/envs/clinical-fine-tuning/lib/libstdc++.so.6
 
 
 
